@@ -1,0 +1,64 @@
+给定两个数组 nums1 和 nums2 ，返回 它们的 交集 。输出结果中的每个元素一定是 唯一 的。我们可以 不考虑输出结果的顺序 。
+
+ 
+
+示例 1：
+
+输入：nums1 = [1,2,2,1], nums2 = [2,2]
+输出：[2]
+示例 2：
+
+输入：nums1 = [4,9,5], nums2 = [9,4,9,8,4]
+输出：[9,4]
+解释：[4,9] 也是可通过的
+ 
+
+提示：
+
+1 <= nums1.length, nums2.length <= 1000
+0 <= nums1[i], nums2[i] <= 1000
+/**
+ * Note: The returned array must be malloced, assume caller calls free().
+ */
+ #define N 2003
+int h[N]; //哈希表
+int null=0x3f3f3f3f; //0x3f3f3f3f定义为空
+
+int find(int x){ //查找x在哈希表的位置
+    int k=x%N;
+    while(h[k]!=null && h[k]!=x){
+        k++;
+        if(k==N) k=0;
+    }
+    return k;
+}
+
+int* intersection(int* nums1, int nums1Size, int* nums2, int nums2Size, int* returnSize) {
+    int* res=(int*)malloc(sizeof(int)*(nums1Size+nums2Size));
+    int t=0;
+
+    bool st[1010]; //用于确定nums2中某个值是否使用过
+    memset(st,false,sizeof st);
+
+    memset(h,0x3f,sizeof h); //初始化哈希表
+    
+    for(int i=0;i<nums1Size;i++){ //将num1中的值插入到哈希表中
+        int k=find(nums1[i]);
+        h[k]=nums1[i];
+    }
+
+    for(int i=0;i<nums2Size;i++){ //遍历nums2中的值，
+        int k=find(nums2[i]);
+        if(h[k]==nums2[i] && !st[nums2[i]]){ //要是在哈希表中出现，且之前没有添加该值到res
+            res[t++]=nums2[i];
+            st[nums2[i]]=true;
+        }
+    }
+    *returnSize=t;
+    return res;
+}
+
+作者：扶我起来 我还能刷
+链接：https://leetcode.cn/problems/intersection-of-two-arrays/solutions/3071824/cyu-yan-hash-by-ama2ing-grothendieckv0k-2nia/
+来源：力扣（LeetCode）
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
